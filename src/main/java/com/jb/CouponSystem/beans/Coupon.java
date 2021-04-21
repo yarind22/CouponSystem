@@ -22,7 +22,6 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int companyID;
-
     @Enumerated(EnumType.ORDINAL)
     private Category category;
     private String title;

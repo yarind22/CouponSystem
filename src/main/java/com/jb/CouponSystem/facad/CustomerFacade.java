@@ -20,8 +20,8 @@ public class CustomerFacade extends ClientFacade {
     private int customerID;
 
     @Override
-    public boolean login(String email, String password) {
-        return customerRepository.findByEmailAndPassword(email, password);
+    public boolean login(String name , String email) {
+        return customerRepository.findByFirstNameAndEmail(name, email);
     }
     public List<Coupon> getCustomerCoupon(){
      return customerRepository.getOne(customerID).getCoupons();

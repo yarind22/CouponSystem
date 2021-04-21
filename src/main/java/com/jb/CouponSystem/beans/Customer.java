@@ -22,7 +22,7 @@ public class Customer {
     private String email;
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     @Singular
     private List<Coupon> coupons = new ArrayList<>();
 
