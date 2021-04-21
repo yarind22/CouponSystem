@@ -14,8 +14,8 @@ public class CustomerImple implements CustomerService {
 
 
     @Override
-    public Boolean isCustomerExsit(String email, String password) {
-        return customerRepository.findByEmailAndPassword(email,password);
+    public Boolean isCustomerExsit(String name, String email) {
+        return customerRepository.findByFirstNameAndEmail(name, email);
     }
 
     @Override

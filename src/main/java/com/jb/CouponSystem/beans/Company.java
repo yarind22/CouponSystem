@@ -21,7 +21,7 @@ public class Company {
     private String email;
     private String password;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @Singular
     private List<Coupon> coupons = new ArrayList<>();
 
