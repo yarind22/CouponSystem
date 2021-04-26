@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompnyRepository extends JpaRepository<Company, Integer> {
-    boolean findByNameAndEmail(String name,String email);
+    Company findByEmailAndPassword(String email,String password);
 }

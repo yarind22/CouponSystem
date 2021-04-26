@@ -9,18 +9,15 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-@NoArgsConstructor
 public abstract class ClientFacade {
+  @Autowired
   protected CompnyRepository compnyRepository;
+  @Autowired
   protected CustomerRepository customerRepository;
+  @Autowired
   protected CouponRepository couponRepository;
 
-  @Autowired
-  public ClientFacade(CompnyRepository compnyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
-    this.compnyRepository = compnyRepository;
-    this.customerRepository = customerRepository;
-    this.couponRepository = couponRepository;
-  }
+
 
   public abstract boolean login(String email, String password);
 }

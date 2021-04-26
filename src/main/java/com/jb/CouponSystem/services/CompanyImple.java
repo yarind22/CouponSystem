@@ -12,8 +12,8 @@ import java.util.List;
 public class CompanyImple implements CompniesService{
     private final CompnyRepository compnyRepository;
     @Override
-    public Boolean isCompanyExist(String name, String email) {
-        return compnyRepository.findByNameAndEmail(name,email);
+    public Boolean isCompanyExist(String email, String password) {
+        return compnyRepository.findByEmailAndPassword(email,password) != null;
     }
 
     @Override
