@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 
-public interface CompniesService {
+public interface CompaniesService {
     Boolean isCompanyExist(String name, String email);
 
     void addCompany(Company company);
