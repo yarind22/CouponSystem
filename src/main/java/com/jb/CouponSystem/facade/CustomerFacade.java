@@ -1,10 +1,11 @@
-package com.jb.CouponSystem.facad;
+package com.jb.CouponSystem.facade;
 
 
 import com.jb.CouponSystem.beans.Category;
 import com.jb.CouponSystem.beans.Coupon;
 import com.jb.CouponSystem.beans.Customer;
-import com.jb.CouponSystem.exrptions.OpertationNotAllowedExeption;
+import com.jb.CouponSystem.exceptions.GenericExceptions;
+import com.jb.CouponSystem.exceptions.MyException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Scope;
@@ -58,16 +59,16 @@ public class CustomerFacade extends ClientFacade {
         return customerRepository.getOne(customerID);
     }
 
-    public void buyCoupon(Coupon coupon) throws OpertationNotAllowedExeption {
+    public void buyCoupon(Coupon coupon) throws MyException {
         for (Coupon custCoupons : customerRepository.getOne(customerID).getCoupons()) {
             if (custCoupons.getId() == coupon.getId()) {
-                throw new OpertationNotAllowedExeption("you can buy only one coupon with this title");
+                throw new MyException(GenericExceptions.INVALID_OPERATION.getDescription());
             }
         }
         if (couponRepository.getOne(coupon.getId()).getAmount() == 0) {
-            throw new OpertationNotAllowedExeption("sorry this coupon is out of stock");
+            throw new MyException(GenericExceptions.ALREADY_EXPIRED.getDescription());
        } else if (coupon.getEndDate().before(now)) {
-            throw new OpertationNotAllowedExeption("sorry this coupon has expired");
+            throw new MyException(GenericExceptions.ALREADY_EXPIRED.getDescription());
        }
         List<Coupon> coupons = customerRepository.getOne(customerID).getCoupons();
         coupons.add(coupon);

@@ -5,13 +5,14 @@ import com.jb.CouponSystem.beans.Category;
 import com.jb.CouponSystem.beans.Company;
 import com.jb.CouponSystem.beans.Coupon;
 import com.jb.CouponSystem.beans.Customer;
-import com.jb.CouponSystem.facad.AdminFacade;
-import com.jb.CouponSystem.facad.CompanyFacade;
-import com.jb.CouponSystem.facad.CustomerFacade;
+import com.jb.CouponSystem.facade.AdminFacade;
+import com.jb.CouponSystem.facade.CompanyFacade;
+import com.jb.CouponSystem.facade.CustomerFacade;
 import com.jb.CouponSystem.login.ClientType;
 import com.jb.CouponSystem.login.LoginManager;
 import com.jb.CouponSystem.repos.CouponRepository;
 import com.jb.CouponSystem.utils.ArtUtils;
+import com.jb.CouponSystem.utils.Asci;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -32,10 +33,13 @@ public class InitData implements CommandLineRunner {
     private final CustomerFacade customerFacade;
     private final CouponRepository couponRepository;
     private final LoginManager loginManager;
+
     private static DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
 
     @Override
     public void run(String... args) throws Exception {
+        Asci.ascii();
+
         Date startDate = Date.valueOf("2021-05-15");
         Date endDate = Date.valueOf("2021-06-23");
         Date mAndMStartDate = Date.valueOf("2021-05-15");
@@ -46,21 +50,28 @@ public class InitData implements CommandLineRunner {
 
 //        ArtUtils.testInfo("");
 
+        String token = loginManager.loginManger("admin@admin.com","admin",ClientType.ADMIN);
 
         ArtUtils.testInfo("add company with cuopon");
         Coupon cp1 = new Coupon(1, Category.FOOD, "coca cola", "10% off", startDate, endDate, 10, 10.90, "cocacola.jpeg");
         Company c1 = new Company("coca cola", "cocacola@gmail.com", "cola1234", List.of(cp1));
-        adminFacade.addCompany(c1);
+        adminFacade.addCompany(c1,token);
         adminFacade.getOneCompany(1);
         System.out.println("--------------------------------------");
         Coupon cp2 = new Coupon(2, Category.FOOD, "M&M", "15% off", mAndMStartDate, mAndMendDate, 15, 21.90, "m&m.jpeg");
         Company c2 = new Company("m&m", "m&m@M&m.com", "1212", List.of(cp2));
-        adminFacade.addCompany(c2);
+        adminFacade.addCompany(c2,token);
         adminFacade.getOneCompany(2);
 
 
         ArtUtils.testInfo("add customer");
-        Customer moshe = Customer.builder().firstName("Moshe").lastName("Cohen").email("moshe@gmail.com").coupon(cp1).password("moshe123").build();
+        Customer moshe = Customer.builder()
+                .firstName("Moshe")
+                .lastName("Cohen")
+                .email("moshe@gmail.com")
+                .coupon(cp1)
+                .password("moshe123")
+                .build();
         adminFacade.addCustomr(moshe);
         System.out.println(adminFacade.getOneCustomer(1));
         System.out.println("-------------------------------------");
@@ -105,13 +116,13 @@ public class InitData implements CommandLineRunner {
 //        adminFacade.getAllCompany().forEach(System.out::println);
 
         ArtUtils.testInfo("ligin managar as admin");
-        System.out.println(loginManager.loginManger("admin@admin.com", "admin", ClientType.ADMIN));
+        System.out.println(loginManager.loginManger("admin@admin.com", "admin", ClientType.ADMIN).toString());
 
         ArtUtils.testInfo("ligin managar as company");
-        System.out.println(loginManager.loginManger("cocacola@gmail.com", "cola1234", ClientType.COMPANY));
+        System.out.println(loginManager.loginManger("cocacola@gmail.com", "cola1234", ClientType.COMPANY).toString());
 
         ArtUtils.testInfo("ligin managar as customer");
-        System.out.println(loginManager.loginManger("moshe@gmail.com", "moshe123", ClientType.CUSTOMER));
+        System.out.println(loginManager.loginManger("moshe@gmail.com", "moshe123", ClientType.CUSTOMER).toString());
 
 
         ArtUtils.testInfo("dayli job");
@@ -121,5 +132,6 @@ public class InitData implements CommandLineRunner {
         couponRepository.save(cp4);
         System.out.println("--------------------------");
         couponRepository.findAll().forEach(System.out::println);
+
     }
 }

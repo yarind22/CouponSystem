@@ -1,34 +1,41 @@
-package com.jb.CouponSystem.facad;
+package com.jb.CouponSystem.facade;
 
 import com.jb.CouponSystem.beans.Company;
 import com.jb.CouponSystem.beans.Customer;
-import com.jb.CouponSystem.exrptions.exeption;
+import com.jb.CouponSystem.exceptions.GenericExceptions;
+import com.jb.CouponSystem.exceptions.MyException;
+import com.jb.CouponSystem.security.TokenManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class AdminFacade extends ClientFacade {
+    private final TokenManager tokenManager;
 
-    @Override
     public boolean login(String email, String password) {
         return email.equals("admin@admin.com") && password.equals("admin");
     }
 
-    public void addCompany(Company company) throws exeption {
+    public void addCompany(Company company,String token) throws MyException {
+        if(!tokenManager.isExist(token)){
+            throw new MyException(GenericExceptions.INVALID_TOKEN.getDescription());
+        }
         for (Company company1 : compnyRepository.findAll()) {
             if (company.getName().equals(company1.getName()) || company.getEmail().equals(company1.getEmail())) {
-                throw new exeption("sorry the name or email used");
+                throw new MyException(GenericExceptions.ALREADY_USED.getDescription());
             }
         }
-            compnyRepository.save(company);
+        tokenManager.updateTokenTime(token);
+        compnyRepository.save(company);
 
     }
 
-    public void updateCompany(Company company) throws exeption {
+    public void updateCompany(Company company) throws MyException {
         if (!company.getName().equals(compnyRepository.getOne(company.getId()).getName()) || !company.getPassword().equals(compnyRepository.getOne(company.getId()).getPassword())) {
-            throw new exeption("sorry you canot change name or password.");
+            throw new MyException(GenericExceptions.INVALID_OPERATION.getDescription());
         }
         compnyRepository.saveAndFlush(company);
     }
@@ -46,21 +53,21 @@ public class AdminFacade extends ClientFacade {
         System.out.println(compnyRepository.getOne(companyID));
     }
 
-    public void addCustomr(Customer customer) throws exeption {
+    public void addCustomr(Customer customer) throws MyException {
 //        if (customer.getEmail() != customerRepository.getOne(customer.getId()).getEmail()) {
 //            throw new exeption("sorry email is alredy used");
 //        }
-       customerRepository.save(customer);
+        customerRepository.save(customer);
     }
 
-    public void updateCustomer(Customer customer) throws exeption {
+    public void updateCustomer(Customer customer) throws MyException {
         for (Customer cust : customerRepository.findAll()) {
             if (cust.getId() == customer.getId()) {
                 customerRepository.saveAndFlush(customer);
                 return;
             }
         }
-        throw new exeption("sorry canot update ID");
+        throw new MyException(GenericExceptions.INVALID_OPERATION.getDescription());
     }
 
     public void deleteCustomer(int customrID) {
@@ -68,11 +75,11 @@ public class AdminFacade extends ClientFacade {
     }
 
     public List<Customer> getAllCustomers() {
-       return customerRepository.findAll();
+        return customerRepository.findAll();
     }
 
     public Customer getOneCustomer(int customerID) {
-       return customerRepository.getOne(customerID);
+        return customerRepository.getOne(customerID);
     }
 
 }

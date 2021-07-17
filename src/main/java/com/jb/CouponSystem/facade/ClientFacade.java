@@ -1,9 +1,8 @@
-package com.jb.CouponSystem.facad;
+package com.jb.CouponSystem.facade;
 
 import com.jb.CouponSystem.repos.CompnyRepository;
 import com.jb.CouponSystem.repos.CouponRepository;
 import com.jb.CouponSystem.repos.CustomerRepository;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
